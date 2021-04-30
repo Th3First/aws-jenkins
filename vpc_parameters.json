@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "poc"
+  },
+  {
+    "ParameterKey": "ClientName",
+    "ParameterValue": "devops"
+  },
+  {
+    "ParameterKey": "Index",
+    "ParameterValue": "01"
+  },
+  {
+    "ParameterKey": "VPCBlock",
+    "ParameterValue": "10.20.0.0/21"
+  },
+  {
+    "ParameterKey": "PublicSubnet01CIDR",
+    "ParameterValue": "10.20.0.0/24"
+  }
+]
