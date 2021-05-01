@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "$Environment"
+  },
+  {
+    "ParameterKey": "ClientName",
+    "ParameterValue": "$ClientName"
+  },
+  {
+    "ParameterKey": "Index",
+    "ParameterValue": "$Index"
+  },
+  {
+    "ParameterKey": "BacketName",
+    "ParameterValue": "$BacketName"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "$KeyName"
+  },
+  {
+    "ParameterKey": "EC2Type",
+    "ParameterValue": "$EC2Type"
+  },
+  {
+    "ParameterKey": "AMI",
+    "ParameterValue": "$AMI"
+  }
+]
