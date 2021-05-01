@@ -30,24 +30,12 @@ Parameters:
     Type: String
 
   PublicSubnet01:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: 'PublicSubnet01'
-
-  PublicSubnet02:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: 'PublicSubnet02'
-
-  PrivateSubnet01:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: 'PrivateSubnet01'
-
-  PrivateSubnet02:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: 'PrivateSubnet02'
-
+    Type: String
+    Default: 'subnet-01e73957ef4df3019'
+    
   VPC:
-    Type: 'AWS::SSM::Parameter::Value<String>'
-    Default: 'VPC'
+    Type: String
+    Default: 'vpc-0934d3757dd330bf3'
 
   BacketName:
     Type: String
@@ -137,4 +125,4 @@ Resources:
       MinSize: 1
       VPCZoneIdentifier:
         - !Ref PublicSubnet01
-        - !Ref PublicSubnet01
+     
