@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "poc"
+  },
+  {
+    "ParameterKey": "ClientName",
+    "ParameterValue": "devops"
+  },
+  {
+    "ParameterKey": "Index",
+    "ParameterValue": "01"
+  },
+  {
+    "ParameterKey": "BacketName",
+    "ParameterValue": "poc-devops-01-data-01"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "devops-andreu-key"
+  },
+  {
+    "ParameterKey": "EC2Type",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "AMI",
+    "ParameterValue": "ami-05d72852800cbf29e"
+  }
+]

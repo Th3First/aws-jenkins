@@ -1,0 +1,140 @@
+---
+Description: "EC2,ASG"
+
+Parameters:
+
+  Environment:
+    Type: String
+    Default: 'poc'
+    Description: Environment name, i.e. prod/stg/dev/tst/poc/qa
+
+  ClientName:
+    Type: String
+    Description: Client name
+
+  Index:
+    Type: String
+    Default: '01'
+    Description: Index
+
+  KeyName:
+    Type: String
+    Description: "EC2 key name"
+
+  EC2Type:
+    Type: String
+    Description: "EC2 type t2.micro"
+
+  AMI:
+    Description: AMI
+    Type: String
+
+  PublicSubnet01:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: 'PublicSubnet01'
+
+  PublicSubnet02:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: 'PublicSubnet02'
+
+  PrivateSubnet01:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: 'PrivateSubnet01'
+
+  PrivateSubnet02:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: 'PrivateSubnet02'
+
+  VPC:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: 'VPC'
+
+  BacketName:
+    Type: String
+    Description: "BacketName"
+
+Resources:
+
+  EC2Role:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action: "sts:AssumeRole"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+      Description: Role for countly server
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        - "arn:aws:iam::aws:policy/AmazonVPCReadOnlyAccess"
+      RoleName: !Join ['-', [!Ref Environment, !Ref ClientName, !Ref Index, "ec2role", "01" ]]
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref Environment, !Ref ClientName, !Ref Index, "ec2role", "01" ]]
+        - Key: env
+          Value: !Ref Environment
+        - Key: client
+          Value: !Ref ClientName
+        - Key: index
+          Value: !Ref Index
+        - Key: "Description"
+          Value:  !Join ['', ["Created by CloudFormation Stack ", !Ref "AWS::StackName" ]]
+
+  EC2SG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security group for countly server
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: '80'
+      VpcId:
+        !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref Environment, !Ref ClientName, !Ref Index, "ec2sg", "01" ]]
+        - Key: env
+          Value: !Ref Environment
+        - Key: client
+          Value: !Ref ClientName
+        - Key: index
+          Value: !Ref Index
+        - Key: "Description"
+          Value:  !Join ['', ["Created by CloudFormation Stack ", !Ref "AWS::StackName" ]]
+
+  EC2LaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      KeyName:
+        Ref: KeyName
+      ImageId: !Ref AMI
+      SecurityGroups:
+        - !GetAtt "EC2SG.GroupId"
+      InstanceType:
+        Ref: EC2Type
+      UserData:
+        'Fn::Base64': !Sub |
+          #!/bin/bash
+          sudo aws s3 cp s3://${BacketName}/deploy.sh / && sudo chmod +x /deploy.sh && sudo /deploy.sh
+
+  EC2ASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Join ['-', [!Ref Environment, !Ref ClientName, !Ref Index, "ec2ags", "01" ]]
+      DesiredCapacity: 1
+      HealthCheckGracePeriod: 30
+      LaunchConfigurationName: !Ref EC2LaunchConfig
+      MaxSize: 1
+      MinSize: 1
+      VPCZoneIdentifier:
+        - !Ref PublicSubnet01
+        - !Ref PublicSubnet01
